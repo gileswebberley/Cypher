@@ -2711,7 +2711,6 @@ GameObject:
   - component: {fileID: 1478753622}
   - component: {fileID: 1478753621}
   - component: {fileID: 1478753620}
-  - component: {fileID: 1478753619}
   - component: {fileID: 1478753618}
   m_Layer: 0
   m_Name: Crypto
@@ -2735,19 +2734,6 @@ MonoBehaviour:
   inputText: {fileID: 81365153}
   inputLengthLimit: 255
   outputText: {fileID: 1403092034}
---- !u!65 &1478753619
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1478753617}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1478753620
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2757,8 +2743,8 @@ MeshRenderer:
   m_GameObject: {fileID: 1478753617}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
