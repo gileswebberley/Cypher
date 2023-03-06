@@ -9,6 +9,10 @@ public class CypherPuzzle : CypherUI
 
     [SerializeField] int maxAttempts = 3;
     static int attempts;
+
+    //put in some kind of basic event system
+    public delegate void OnSuccess();
+    public static event OnSuccess onSuccess;
     // Start is called before the first frame update
     new void Start()
     {
@@ -21,6 +25,12 @@ public class CypherPuzzle : CypherUI
     {
         if(++attempts > maxAttempts) return false;
         else return true;
+    }
+
+    void SuccesfulAttempt()
+    {
+        Debug.Log("Succesfully completed this puzzle");
+        onSuccess?.Invoke();
     }
 
     // // Update is called once per frame
@@ -38,6 +48,9 @@ public class CypherPuzzle : CypherUI
         if(AttemptSolution()){
         shiftAmount = (int)shiftSlider.value;
         outputText.text = Decrypt(clue);
+        if(shiftAmount == solution){
+            SuccesfulAttempt();
+        }
         }
     }
 }
