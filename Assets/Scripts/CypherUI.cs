@@ -1,98 +1,127 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using TMPro;
 
 //Challenge to create a quick shift encoding mechanism to work with a GUI in Unity
 public class CypherUI : MonoBehaviour
 {
     static readonly char[] letters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '!', '@', '?', '#', ',', ':', '£', ' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
-    static int shiftAmount = 0;
+    protected static int shiftAmount = 0;
     static int shiftDirectionMultiplier = 1;//change to -1 to decode
 
     [SerializeField] TMP_InputField inputText;
     [SerializeField] int inputLengthLimit = 255;
-    [SerializeField] TMP_InputField outputText;
-    Slider shiftSlider;//simply name the slider game object ""ShiftAmount"
+    //making this public as I am about to inherit from it and SerializeField I don't think carries down - ah no, wrong
+    [SerializeField] protected TMP_InputField outputText;
+    protected Slider shiftSlider;//simply name the slider game object ""ShiftAmount"
 
-    TextMeshProUGUI shiftText, charCountText;//name "ShiftAmountText" and "CharacterCount" if you want to use them
-    Button encodeButton, decodeButton;//name "Encode" and "Decode"
+    protected TextMeshProUGUI shiftText, charCountText;//name "ShiftAmountText" and "CharacterCount" if you want to use them
+    protected Button encodeButton, decodeButton;//name "Encode" and "Decode"
 
     // Start is called before the first frame update
-    void Start()
+    //This finds which components are available for the gui and connects their event methods
+    protected void Start()
     {
         //set a limit for the input message - 255 so it feels like an sms
-        inputText.characterLimit = inputLengthLimit;
+        if(inputText != null) inputText.characterLimit = inputLengthLimit;
         //now see if there is a text area for counting the length of message
         //if it exists then attach an event to look after displaying the count
-        if (GameObject.Find("CharacterCount").TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI c))
+        if (SafeFind<TextMeshProUGUI>("CharacterCount",ref charCountText))
         {
             //ok, to use TryGetComponent simply create a temp local out variable and assign it -
             // it would have to be a ref to have worked as I expected
-            //Debug.Log("TryGetComponent worked as expexted");//no, it hasn't!
-            charCountText = c;
+            Debug.Log("SafeSearch worked as expexted");
+            //charCountText = c;
             CharCountChanged("");
             //onValueChange is a UnityEvent<string> so the entered string is sent to the listener
             inputText.onValueChanged.AddListener(CharCountChanged);
         }
         //grab the expected slider which sets the shift amount
-        shiftSlider = GameObject.Find("ShiftAmount").GetComponent<Slider>();
+        if(SafeFind<Slider>("ShiftAmount",ref shiftSlider)){
+            //shiftSlider = ss;
+            shiftSlider.maxValue = letters.Length-1;
+        }
         //check to see if we can grab an associated textfield named ShiftAmountText
         //if the text area exists then set it and attach the event to update when value changes
-        if (GameObject.Find("ShiftAmountText").TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI s))
+        if (SafeFind<TextMeshProUGUI>("ShiftAmountText",ref shiftText))
         {
-            shiftText = s;
+            //shiftText = s;
             //set the text in the shift amount textfield to the slider's start value
             SliderValueChange(shiftSlider.value);
             //had to add float parameter to the method to make it work as it is a UnityEvent<float>
             shiftSlider.onValueChanged.AddListener(SliderValueChange);
         }
 
-        //Now find the buttons named Encode and Decode
-        encodeButton = GameObject.Find("Encode").GetComponent<Button>();
-        decodeButton = GameObject.Find("Decode").GetComponent<Button>();
-        //automagically tie them together with their event methods
-        encodeButton.onClick.AddListener(Encode);
-        decodeButton.onClick.AddListener(Decode);
+        //Now find the buttons named Encode and Decode and automagically tie them together with their event methods
+        if(SafeFind<Button>("Encode",ref encodeButton))
+        {
+            //encodeButton = e;
+            encodeButton.onClick.AddListener(Encode);
+        }
+        if(SafeFind<Button>("Decode",ref decodeButton))
+        {
+            Debug.Log("Decode button found");
+            //decodeButton = d;
+            decodeButton.onClick.AddListener(Decode);
+        }
+        //decodeButton.onClick.AddListener(Decode);
+    }
+    //Safely try to Find(find) and GetComponent<T>
+    protected bool SafeFind<T>(string find, ref T component)
+    {
+        GameObject returnGO = GameObject.Find(find);
+        if(returnGO == null){
+            Debug.Log($"Find({find}) returned null");
+             component = default(T);
+             return false;
+        }else{
+            Debug.Log($"Find({find}) returned a game object");
+            if(returnGO.TryGetComponent<T>(out T tmpComponent)){
+                component = tmpComponent;
+                return true;
+            }else{
+                Debug.Log("But couldn't find the component");
+                component = default(T);
+                return false;
+            }
+        }
     }
 
     //for setting the textfield to match how many characters have been entered 
-    public void CharCountChanged(string s)
+    public virtual void CharCountChanged(string s)
     {
         charCountText.text = $"{s.Length}/{inputLengthLimit}";
     }
 
     //float parameter was added to make it allowable to be added as a listener to OnValueChanged
-    public void SliderValueChange(float f)
+    public virtual void SliderValueChange(float f)
     {
         shiftText.text = $"Shift Amount: {f}";//{(int)shiftSlider.value}";
     }
 
     //attach to OnClick event for the gui encode button
-    public void Encode()
+    public virtual void Encode()
     {
         shiftAmount = (int)shiftSlider.value;
         outputText.text = $"{Encrypt(inputText.text)}\nTo decode shift by: {shiftAmount}";
     }
 
     //attach to OnClick event for the gui decode button
-    public void Decode()
+    public virtual void Decode()
     {
         shiftAmount = (int)shiftSlider.value;
         outputText.text = Decrypt(inputText.text);
     }
 
     //Original static class methods created for C# console version are below
-    static string Encrypt(string toEncode)
+    protected static string Encrypt(string toEncode)
     {
         shiftDirectionMultiplier = 1;
         return ShiftString(toEncode);
     }
 
-    static string Decrypt(string toDecode)
+    protected static string Decrypt(string toDecode)
     {
         shiftDirectionMultiplier = -1;
         return ShiftString(toDecode);
