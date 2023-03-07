@@ -7,10 +7,16 @@ public class EventTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CypherPuzzle.onSuccess += ChangeColour;
+        CypherPuzzle.onSuccess += Success;
+        CypherPuzzle.onAttempt += Attempt;
     }
 
-    void ChangeColour()
+    void Attempt(float accuracyOfAttempt)
+    {
+        this.gameObject.transform.GetComponent<Renderer>().material.color = new Color(accuracyOfAttempt,0,-accuracyOfAttempt,1);
+    }
+
+    void Success()
     {
         this.gameObject.transform.GetComponent<Renderer>().material.color = new Color(1,0,0,1);
     }
