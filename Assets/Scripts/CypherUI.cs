@@ -6,9 +6,9 @@ using TMPro;
 //Challenge to create a quick shift encoding mechanism to work with a GUI in Unity
 public class CypherUI : MonoBehaviour
 {
-    static readonly char[] letters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '!', '@', '?', '#', ',', ':', '£', ' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
-    protected static int shiftAmount = 0;
-    static int shiftDirectionMultiplier = 1;//change to -1 to decode
+    readonly char[] letters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '!', '@', '?', '#', ',', ':', '£', ' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+    protected int shiftAmount = 0;
+    int shiftDirectionMultiplier = 1;//change to -1 to decode
 
     [SerializeField] TMP_InputField inputText;
     [SerializeField] int inputLengthLimit = 255;
@@ -115,20 +115,20 @@ public class CypherUI : MonoBehaviour
     }
 
     //Original static class methods created for C# console version are below
-    protected static string Encrypt(string toEncode)
+    protected string Encrypt(string toEncode)
     {
         shiftDirectionMultiplier = 1;
         return ShiftString(toEncode);
     }
 
-    protected static string Decrypt(string toDecode)
+    protected string Decrypt(string toDecode)
     {
         shiftDirectionMultiplier = -1;
         return ShiftString(toDecode);
     }
 
     //string encoding function
-    static string ShiftString(string s)
+    string ShiftString(string s)
     {
         string tmpStr = "";
         //work with only lowercase for simplicity - EXTENDED ARRAY TO INCLUDE CAPITALS, NUMBERS, AND A FEW SPECIAL CHARS
@@ -145,7 +145,7 @@ public class CypherUI : MonoBehaviour
         return tmpStr;
     }
     //function to move backwards and forwards through a number range - 0..the length of letters[]
-    static int ShiftLetterIndex(char letter)
+    int ShiftLetterIndex(char letter)
     {
         int tmpIndex = Array.IndexOf(letters, letter);
         //now add or remove the shift amount based on whether it is decoding or encoding

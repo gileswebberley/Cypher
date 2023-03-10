@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RDInterfaces;
 
-public class EventTest : MonoBehaviour
+public class CypherTracker : MonoBehaviour
 {
+    [SerializeField, Tooltip("Attach the IPuzzleEvent to track")] CypherPuzzle myPuzzle;
+    [SerializeField, Tooltip("The 'Room' that we are part of")] CypherRoom myRoom;
+    //public List<string> puzzleIdSolution;
     // Start is called before the first frame update
     void Start()
     {
-        CypherPuzzle.onSuccess += Success;
-        CypherPuzzle.onAttempt += Attempt;
+        myPuzzle.onSuccess += Success;
+        myPuzzle.onAttempt += Attempt;
     }
 
     void Attempt(float accuracyOfAttempt)
@@ -17,8 +21,9 @@ public class EventTest : MonoBehaviour
         this.gameObject.transform.GetComponent<Renderer>().material.color = new Color(1-Mathf.Abs(accuracyOfAttempt),0,Mathf.Abs(accuracyOfAttempt),1);
     }
 
-    void Success()
+    void Success(string puzzleId)
     {
         this.gameObject.transform.GetComponent<Renderer>().material.color = new Color(0,1,0,1);
+        myRoom.RegisterSuccess(puzzleId);
     }
 }
