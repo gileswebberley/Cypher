@@ -13,16 +13,12 @@ public class EventTest : MonoBehaviour
 
     void Attempt(float accuracyOfAttempt)
     {
-        this.gameObject.transform.GetComponent<Renderer>().material.color = new Color(accuracyOfAttempt,0,-accuracyOfAttempt,1);
+        Debug.Log($"Attempt accuracy :{accuracyOfAttempt}");
+        this.gameObject.transform.GetComponent<Renderer>().material.color = new Color(1-Mathf.Abs(accuracyOfAttempt),0,Mathf.Abs(accuracyOfAttempt),1);
     }
 
     void Success()
     {
-        this.gameObject.transform.GetComponent<Renderer>().material.color = new Color(1,0,0,1);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
+        this.gameObject.transform.GetComponent<Renderer>().material.color = new Color(0,1,0,1);
     }
 }

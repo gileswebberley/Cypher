@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using RDInterfaces;
 
-public class CypherPuzzle : CypherUI
+public class CypherPuzzle : CypherUI, IPuzzleEvent
 {
     [SerializeField] string clue = "?TcM";
     [SerializeField] int solution = 52;
@@ -14,6 +13,8 @@ public class CypherPuzzle : CypherUI
     //put in some kind of basic event system
     public delegate void OnSuccess();
     public static event OnSuccess onSuccess;
+    public delegate void OnFailure();
+    public static event OnFailure onFailure;
     //so we can track how close you are to the solution
     public delegate void OnAttempt(float accuracyOfAttempt);//0 is correct
     public static event OnAttempt onAttempt;
@@ -29,7 +30,7 @@ public class CypherPuzzle : CypherUI
     {
         if(++attempts > maxAttempts){ return false;}
         else{
-            accuracy = (shiftSlider.maxValue-shiftAmount)/shiftSlider.maxValue;
+            accuracy = (solution-shiftAmount)/shiftSlider.maxValue;
             onAttempt?.Invoke(accuracy);
             return true;
             }
@@ -37,19 +38,18 @@ public class CypherPuzzle : CypherUI
 
     void SuccesfulAttempt()
     {
+        //set the attempts to lock it when it's completed
+        attempts = maxAttempts+1;
         Debug.Log("Succesfully completed this puzzle");
         onSuccess?.Invoke();
     }
 
-    // // Update is called once per frame
-    // void Update()
-    // {
-        
-    // }
+    //override cos we want less info in the string
     public override void SliderValueChange(float f)
     {
         shiftText.text = $"{f}";//{(int)shiftSlider.value}";
     }
+
     //this is the event added to the Decode button in base.Start();
     public override void Decode()
     {
