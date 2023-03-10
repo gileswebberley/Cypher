@@ -70,7 +70,9 @@ public class CypherUI : MonoBehaviour
     //Safely try to Find(find) and GetComponent<T>
     protected bool SafeFind<T>(string find, ref T component)
     {
-        GameObject returnGO = GameObject.Find(find);
+        //need this to only search in it's own heirachy to work as a prefab (GameObject.Find will always only find one of the named)
+
+        GameObject returnGO = TraverseTransformFind(find, gameObject.transform);
         if(returnGO == null){
             Debug.Log($"Find({find}) returned null");
              component = default(T);
@@ -86,6 +88,36 @@ public class CypherUI : MonoBehaviour
                 return false;
             }
         }
+    }
+
+//Gosh, this has had me twisting my brain - I want to be able to Find(name) but only within the parent
+//game object so recursively search with the Transform.Find which only checks direct children
+    protected GameObject TraverseTransformFind(string find, Transform parentT)
+    {
+        Debug.Log($"Traversing...inside transform {parentT.name}");
+        //try to see if direct child..
+        Transform returnT = parentT.Find(find);
+        //Debug.Log($"returnGO = {returnT} inside transform {parentT.name}");
+        //otherwise dig down..
+        if(returnT == null && parentT.childCount > 0){
+            //check out the first level of children
+            foreach(Transform t in parentT)
+            {
+                returnT = t.Find(find);
+                //this doesn't feel right :/
+                if(returnT == null){
+                    if(t.childCount > 0){
+                        return TraverseTransformFind(find, t);//CAREFULL GILO, RECURSION
+                    }else{
+                        return null;
+                    }
+                }else {
+                    return returnT.gameObject;
+                }
+            }
+        }
+        //it's found in it's parent
+        return returnT.gameObject;
     }
 
     //for setting the textfield to match how many characters have been entered 
