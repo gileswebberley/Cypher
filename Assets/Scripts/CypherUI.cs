@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -65,13 +66,11 @@ public class CypherUI : MonoBehaviour
             //decodeButton = d;
             decodeButton.onClick.AddListener(Decode);
         }
-        //decodeButton.onClick.AddListener(Decode);
     }
     //Safely try to Find(find) and GetComponent<T>
     protected bool SafeFind<T>(string find, ref T component)
     {
         //need this to only search in it's own heirachy to work as a prefab (GameObject.Find will always only find one of the named)
-
         GameObject returnGO = TraverseTransformFind(find, gameObject.transform);
         if(returnGO == null){
             Debug.Log($"Find({find}) returned null");
@@ -94,30 +93,49 @@ public class CypherUI : MonoBehaviour
 //game object so recursively search with the Transform.Find which only checks direct children
     protected GameObject TraverseTransformFind(string find, Transform parentT)
     {
-        Debug.Log($"Traversing...inside transform {parentT.name}");
-        //try to see if direct child..
-        Transform returnT = parentT.Find(find);
-        //Debug.Log($"returnGO = {returnT} inside transform {parentT.name}");
-        //otherwise dig down..
-        if(returnT == null && parentT.childCount > 0){
-            //check out the first level of children
-            foreach(Transform t in parentT)
-            {
-                returnT = t.Find(find);
-                //this doesn't feel right :/
-                if(returnT == null){
-                    if(t.childCount > 0){
-                        return TraverseTransformFind(find, t);//CAREFULL GILO, RECURSION
-                    }else{
-                        return null;
-                    }
-                }else {
-                    return returnT.gameObject;
-                }
-            }
+        //THANK YOU Penjimon - I had ended up just getting more and more complicated when I knew it should be a simple solution!!
+        //https://stackoverflow.com/questions/56410705/how-to-find-a-gameobject-lower-in-hierarchy-starting-at-root-gameobject
+        Queue<Transform> queue = new Queue<Transform>();
+        queue.Enqueue(parentT);
+        while (queue.Count > 0)
+        {
+            var c = queue.Dequeue();
+            if (c.name == find) return c.gameObject;
+            foreach (Transform t in c) queue.Enqueue(t);
         }
-        //it's found in it's parent
-        return returnT.gameObject;
+        return null;
+        
+        // Debug.Log($"Traversing...inside transform {parentT.name}");
+        // //try to see if direct child..
+        // Transform returnT = parentT.Find(find);
+        // if (returnT != null) return returnT.gameObject;
+        // //otherwise dig down..
+        // if(parentT.childCount > 0){
+        //     //check out the first level of children
+        //     foreach(Transform t in parentT)
+        //     {
+        //         returnT = t.Find(find);
+        //         //this doesn't feel right :/
+        //         if(returnT == null){
+        //             if(t.childCount > 0){
+        //                 Debug.Log($"{t.name} has children");
+        //                 return TraverseTransformFind(find, t);//CAREFULL GILO, RECURSION
+        //             }else if(parentT.parent.GetChild(t.GetSiblingIndex()+1) != null){//trying to stop it getting stuck at the bottom
+        //                 Debug.Log("Going back up the transform heirachy");
+        //                 //return null;
+        //                 //I think this means it only digs down the first
+        //                 return TraverseTransformFind(find, parentT.parent.GetChild(t.GetSiblingIndex()+1));
+        //             }
+        //         } else {
+        //             return returnT.gameObject;  
+        //         }
+        //     }
+        // }else if(parentT.parent.GetChild(parentT.GetSiblingIndex()+1) != null) {
+        //     Debug.Log($"We have no children in {parentT.name} so trying to get back above");
+        //     return TraverseTransformFind(find, parentT.parent.GetChild(parentT.GetSiblingIndex()+1));
+        // }
+        // //it's found in it's parent
+        // return returnT.gameObject;
     }
 
     //for setting the textfield to match how many characters have been entered 

@@ -1,7 +1,6 @@
 using UnityEngine;
-using RDInterfaces;
 
-public class CypherPuzzle : CypherUI, IPuzzleEvent
+public class CypherPuzzle : CypherUI
 {
     [SerializeField, Tooltip("Identifying string to be sent with the OnSuccess event")] string puzzleId = "UId";
     [SerializeField] string clue = "?TcM";

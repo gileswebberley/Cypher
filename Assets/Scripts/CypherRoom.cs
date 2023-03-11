@@ -8,35 +8,51 @@ public class CypherRoom : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    } 
-    
+
+    }
+
     public void RegisterSuccess(string puzzleId)
     {
-        if(puzzleIdSolution.Count == 1 && puzzleIdSolution[0] == puzzleId)
+        //if we're down to the last needed 
+        if (puzzleIdSolution.Count == 1)
         {
-            Success();
-            return;
-        }
-        //check whether this particular puzzle has already been solved - 
-        //to avoid being able to solve just one puzzle puzzleIdSolution.length times
-        foreach(string pId in puzzleIdSolution)
-        {
-            if(puzzleId == pId){
-                puzzleIdSolution.Remove(pId);
+            //if it's the one we're still waiting to be solved
+            if (puzzleIdSolution[0] == puzzleId)
+            {
+                Success();
+                return;
             }
-            if(puzzleIdSolution.Count == 0) Success();
+        }
+        else
+        {
+            //check whether this particular puzzle has already been solved - 
+            //to avoid being able to solve just one puzzle puzzleIdSolution.length times
+            foreach (string pId in puzzleIdSolution)
+            {
+                if (puzzleId == pId)
+                {
+                    //remove this from the list that needs solving
+                    puzzleIdSolution.Remove(pId);
+                    //and check if it's the final solution required to unlock
+                    if (puzzleIdSolution.Count == 0){ Success();}
+                    //then break out of foreach cos we've affected the enumerator
+                    break;
+                }
+                
+
+            }
         }
     }
 
     void Success()
     {
-        gameObject.transform.GetComponent<Renderer>().material.color = new Color(0,1,0,1);
+        Debug.Log("DOOR OPENS IN CYPHER ROOM");
+        gameObject.transform.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 1);
     }
 }
