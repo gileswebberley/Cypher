@@ -96,13 +96,19 @@ public class CypherUI : MonoBehaviour
         //THANK YOU Penjimon - I had ended up just getting more and more complicated when I knew it should be a simple solution!!
         //https://stackoverflow.com/questions/56410705/how-to-find-a-gameobject-lower-in-hierarchy-starting-at-root-gameobject
         Queue<Transform> queue = new Queue<Transform>();
+        //add the parent transform to the top of the queue
         queue.Enqueue(parentT);
         while (queue.Count > 0)
         {
+            //take the top item from the queue (which removes it as well as returns it)
             var c = queue.Dequeue();
+            //if this is the transform we are looking for then break out of loop and return the gameobject
             if (c.name == find) return c.gameObject;
+            //otherwise add all of the children transforms which we will then cycle over doing the same
+            //because queue is FIFO then I believe we search the hierarchically highest transform first
             foreach (Transform t in c) queue.Enqueue(t);
         }
+        //we've dug through the whole heirarchy of parentT and found nothing
         return null;
         
         // Debug.Log($"Traversing...inside transform {parentT.name}");

@@ -1,4 +1,5 @@
 using UnityEngine;
+using RDInterfaces;
 
 public class CypherPuzzle : CypherUI
 {
@@ -24,6 +25,7 @@ public class CypherPuzzle : CypherUI
     // Start is called before the first frame update
     new void Start()
     {
+        Encode();
       base.Start();
       attempts = 0;
       outputText.text = clue;
@@ -65,6 +67,15 @@ public class CypherPuzzle : CypherUI
     public override void SliderValueChange(float f)
     {
         shiftText.text = $"{f}";
+    }
+
+    //decided it will be more usable if you can type in what you want the clue to be, rather than the encoded string
+    public override void Encode()
+    {
+        //set the shiftAmount which is used in the Encrypt(), then reset it
+        shiftAmount = solution;
+        clue = Encrypt(clue);
+        shiftAmount = 0;
     }
 
     //this is the event added to the Decode button in base.Start() - override cos it's behaviour is different

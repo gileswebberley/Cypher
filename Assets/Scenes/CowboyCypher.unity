@@ -183,12 +183,20 @@ PrefabInstance:
       value: CypherMachine (2)
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
+      propertyPath: clue
+      value: Us
+      objectReference: {fileID: 0}
+    - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: puzzleId
       value: cypher3
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
+      propertyPath: solution
+      value: 51
+      objectReference: {fileID: 0}
+    - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: maxAttempts
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591742341610, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: m_Camera
@@ -271,12 +279,20 @@ PrefabInstance:
       value: CypherMachine (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
+      propertyPath: clue
+      value: Help
+      objectReference: {fileID: 0}
+    - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: puzzleId
       value: cypher2
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
+      propertyPath: solution
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: maxAttempts
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591742341610, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: m_Camera
@@ -1067,12 +1083,20 @@ PrefabInstance:
       value: CypherMachine
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
+      propertyPath: clue
+      value: Please
+      objectReference: {fileID: 0}
+    - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: puzzleId
       value: cypher1
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
+      propertyPath: solution
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 4106905591374250015, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: maxAttempts
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4106905591742341610, guid: 298c903bba309f1468af67d7da662415, type: 3}
       propertyPath: m_Camera
